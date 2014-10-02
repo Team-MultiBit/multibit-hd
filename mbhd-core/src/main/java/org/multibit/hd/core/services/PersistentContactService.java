@@ -11,6 +11,7 @@ import org.multibit.hd.core.dto.Contact;
 import org.multibit.hd.core.dto.WalletId;
 import org.multibit.hd.core.exceptions.ContactsLoadException;
 import org.multibit.hd.core.exceptions.ContactsSaveException;
+import org.multibit.hd.core.exceptions.ContactsImportException;
 import org.multibit.hd.core.exceptions.EncryptedFileReaderWriterException;
 import org.multibit.hd.core.files.SecureFiles;
 import org.multibit.hd.core.managers.InstallationManager;
@@ -51,6 +52,11 @@ public class PersistentContactService implements ContactService {
   private File backingStoreFile;
 
   /**
+   * The location of the backing importContacts for importing contacts from a different wallet
+   */
+  private File applicationDataDirectory;
+
+  /**
    * The serializer for the backing writeContacts
    */
   private ContactsProtobufSerializer protobufSerializer;
@@ -77,6 +83,7 @@ public class PersistentContactService implements ContactService {
     SecureFiles.verifyOrCreateDirectory(contactsDirectory);
 
     this.backingStoreFile = new File(contactsDirectory.getAbsolutePath() + File.separator + CONTACTS_DATABASE_NAME);
+    this.applicationDataDirectory = applicationDataDirectory;
 
     initialise();
   }
@@ -323,6 +330,44 @@ public class PersistentContactService implements ContactService {
       throw new ContactsSaveException("Could not save contacts db '" + backingStoreFile.getAbsolutePath() + "'. Error was '" + e.getMessage() + "'.");
     }
   }
+
+  @Override
+  public void importContacts() throws ContactsImportException {
+
+//    String importWalletId = "315bb89c-6a548630-8be41c19-657597db-55848f0b";
+//    String importWalletRoot = WalletManager.createWalletRoot(importWalletId);
+    String importWalletRoot = "mbhd-315bb89c-6a548630-8be41c19-657597db-55848f0b";
+    String importWalletPassword = "deafmute";
+    File importWalletDirectory = WalletManager.getOrCreateWalletDirectory(applicationDataDirectory, importWalletRoot);
+    File contactsToBeImportedDirectory = new File(importWalletDirectory.getAbsolutePath() + File.separator + CONTACTS_DIRECTORY_NAME);
+    File contactsToBeImported = new File(contactsToBeImportedDirectory.getAbsolutePath() + File.separator + CONTACTS_DATABASE_NAME);
+
+    log.debug("Importing contacts from '{}'", contactsToBeImportedDirectory);
+
+    try{
+      ByteArrayInputStream decryptedInputStream = EncryptedFileReaderWriter.readAndDecrypt(backingStoreFile,
+          WalletManager.INSTANCE.getCurrentWalletSummary().get().getPassword(),
+          WalletManager.SCRYPT_SALT,
+          WalletManager.AES_INITIALISATION_VECTOR);
+      Set<Contact> loadedContacts = protobufSerializer.readContacts(decryptedInputStream);
+      Set<Contact> importedContacts = Sets.newHashSet();
+      ByteArrayInputStream decryptedImportContactInputStream = EncryptedFileReaderWriter.readAndDecrypt(contactsToBeImported,
+          importWalletPassword,
+          WalletManager.SCRYPT_SALT,
+          WalletManager.AES_INITIALISATION_VECTOR);
+      Set<Contact> loadedImportContacts = protobufSerializer.readContacts(decryptedImportContactInputStream);
+      importedContacts.clear();
+      importedContacts.addAll(loadedImportContacts);
+
+      contacts.clear();
+      contacts.addAll(loadedContacts);
+      contacts.addAll(importedContacts);
+      writeContacts();
+    } catch (EncryptedFileReaderWriterException e) {
+      throw new ContactsImportException("Could not importContacts contacts db '" + contactsToBeImportedDirectory + "'. Error was '" + e.getMessage() + "'.");
+    }
+  }
+
 
   @Override
   public void addDemoContacts() {

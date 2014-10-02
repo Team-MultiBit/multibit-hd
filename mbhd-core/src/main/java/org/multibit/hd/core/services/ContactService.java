@@ -2,6 +2,7 @@ package org.multibit.hd.core.services;
 
 import com.google.bitcoin.core.Address;
 import org.multibit.hd.core.dto.Contact;
+import org.multibit.hd.core.exceptions.ContactsImportException;
 import org.multibit.hd.core.exceptions.ContactsLoadException;
 import org.multibit.hd.core.exceptions.ContactsSaveException;
 
@@ -96,6 +97,13 @@ public interface ContactService {
    * @throws ContactsSaveException If something goes wrong
    */
   void writeContacts() throws ContactsSaveException;
+
+  /**
+   * <p>Import contacts from another wallet owned by the same user.</p>
+   *
+   * @throws ContactsImportException If something goes wrong
+   */
+  void importContacts() throws ContactsImportException;
 
   /**
    * <p>Create some demonstration contacts for testing purposes</p>
