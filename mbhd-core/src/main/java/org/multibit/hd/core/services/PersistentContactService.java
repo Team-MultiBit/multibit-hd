@@ -337,7 +337,7 @@ public class PersistentContactService implements ContactService {
 //    String importWalletId = "315bb89c-6a548630-8be41c19-657597db-55848f0b";
 //    String importWalletRoot = WalletManager.createWalletRoot(importWalletId);
     String importWalletRoot = "mbhd-315bb89c-6a548630-8be41c19-657597db-55848f0b";
-    String importWalletPassword = "deafmute";
+    String importWalletPassword = "helloworld";
     File importWalletDirectory = WalletManager.getOrCreateWalletDirectory(applicationDataDirectory, importWalletRoot);
     File contactsToBeImportedDirectory = new File(importWalletDirectory.getAbsolutePath() + File.separator + CONTACTS_DIRECTORY_NAME);
     File contactsToBeImported = new File(contactsToBeImportedDirectory.getAbsolutePath() + File.separator + CONTACTS_DATABASE_NAME);
