@@ -118,8 +118,13 @@ public class InstallationManager {
 
     // Create the application data directory if it does not exist
     File applicationDataDirectory = new File(applicationDataDirectoryName);
-    SecureFiles.verifyOrCreateDirectory(applicationDataDirectory);
 
+    // In Linux/Unix/Solaris, set applicationDataDirectory to be only owner readable
+    if (OSUtils.isLinux() || OSUtils.isUnix() || OSUtils.isSolaris()){
+        SecureFiles.verifyDirectoryOrCreateOnlyOwnerReadableExecutableDirectory(applicationDataDirectory);
+    } else {
+        SecureFiles.verifyOrCreateDirectory(applicationDataDirectory);
+    }
     // Must be OK to be here so set this as the current
     currentApplicationDataDirectory = applicationDataDirectory;
 

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.security.acl.Owner;
 
 /**
  * <p>Utilties to provide the following to applications:</p>
@@ -109,6 +110,33 @@ public class SecureFiles {
 
     return directory;
   }
+
+    /**
+     * @param directory The directory to verify or create to be only owner readable
+     *
+     * @return The directory
+     *
+     * @throws java.lang.IllegalStateException If the file could not be created
+     */
+    public static File verifyDirectoryOrCreateOnlyOwnerReadableExecutableDirectory(File directory) {
+
+        log.debug("Verify or create only owner readable directory: '{}'", directory.getAbsolutePath());
+
+        if (!directory.exists()) {
+            Preconditions.checkState(directory.mkdirs(), "Could not create directory: '" + directory + "'");
+            // set directory to only owner readable and executable
+            boolean OwnerReadablePermission = directory.setReadable(false, false) && directory.setReadable(true, true)
+                    && directory.setExecutable(false, false) && directory.setExecutable(true, true);
+            if(!OwnerReadablePermission){
+                log.debug("Could not set permissions on the directory: '{}'" + directory.getAbsolutePath());
+            }
+        }
+
+        Preconditions.checkState(directory.isDirectory(), "Incorrectly identified the directory of '" + directory + " as a file.");
+
+        return directory;
+    }
+
 
   /**
    * @param parentDirectory The parent directory
