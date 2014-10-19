@@ -430,6 +430,20 @@ public class Buttons {
 
   }
 
+    /**
+     * @param action The click action
+     *
+     * @return A new "import_wallet" button with icon
+     */
+    public static JButton newImportWalletButton(Action action) {
+
+        JButton button = newButton(action, MessageKey.IMPORT_WALLET, MessageKey.IMPORT_WALLET_TOOLTIP);
+
+        AwesomeDecorator.applyIcon(AwesomeIcon.PLUS, button, false, MultiBitUI.NORMAL_ICON_SIZE);
+
+        return button;
+    }
+
   /**
    * @param action The click action
    *

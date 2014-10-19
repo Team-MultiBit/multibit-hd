@@ -21,6 +21,7 @@ import org.multibit.hd.ui.views.wizards.Wizards;
 import org.multibit.hd.ui.views.wizards.edit_contact.EditContactState;
 import org.multibit.hd.ui.views.wizards.edit_contact.EditContactWizardModel;
 import org.multibit.hd.ui.views.wizards.edit_contact.EnterContactDetailsMode;
+import org.multibit.hd.ui.views.wizards.importwallet.ImportWalletRequestType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,6 +87,7 @@ public class ContactsScreenView extends AbstractScreenView<ContactsScreenModel> 
     editButton = Buttons.newEditButton(getEditAction());
     JButton deleteButton = Buttons.newDeleteButton(getDeleteAction());
     JButton undoButton = Buttons.newUndoButton(getUndoAction());
+    JButton importwalletButton = Buttons.newImportWalletButton(getImportWalletAction());
 
     // Populate the model
     contactsTable = Tables.newContactsTable(getScreenModel().getContacts(), editButton);
@@ -116,6 +118,7 @@ public class ContactsScreenView extends AbstractScreenView<ContactsScreenModel> 
     contentPanel.add(editButton, "shrink");
     contentPanel.add(deleteButton, "shrink");
     contentPanel.add(undoButton, "shrink");
+    contentPanel.add(importwalletButton, "shrink");
     contentPanel.add(Labels.newBlankLabel(), "grow,push,wrap"); // Empty label to pack buttons
     contentPanel.add(scrollPane, "span 6,grow,push");
 
@@ -258,6 +261,22 @@ public class ContactsScreenView extends AbstractScreenView<ContactsScreenModel> 
     };
 
   }
+
+    /**
+     * @return The import wallet contact action
+     */
+    private Action getImportWalletAction() {
+
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                // Fire up a wizard in new mode
+                Panels.showLightBox(Wizards.newImportWalletWizard(getScreenModel().getContactService(), ImportWalletRequestType.PASSWORD).getWizardScreenHolder());
+
+            }
+        };
+    }
 
   /**
    * @return The undo action

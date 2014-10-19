@@ -6,6 +6,7 @@ import org.multibit.hd.core.config.Configuration;
 import org.multibit.hd.core.config.Configurations;
 import org.multibit.hd.core.dto.*;
 import org.multibit.hd.core.managers.WalletManager;
+import org.multibit.hd.core.services.ContactService;
 import org.multibit.hd.ui.views.wizards.about.AboutState;
 import org.multibit.hd.ui.views.wizards.about.AboutWizard;
 import org.multibit.hd.ui.views.wizards.about.AboutWizardModel;
@@ -16,7 +17,9 @@ import org.multibit.hd.ui.views.wizards.change_password.ChangePasswordState;
 import org.multibit.hd.ui.views.wizards.change_password.ChangePasswordWizard;
 import org.multibit.hd.ui.views.wizards.change_password.ChangePasswordWizardModel;
 import org.multibit.hd.ui.views.wizards.credentials.CredentialsState;
+import org.multibit.hd.ui.views.wizards.importwallet.ImportWalletState;
 import org.multibit.hd.ui.views.wizards.credentials.CredentialsWizardModel;
+import org.multibit.hd.ui.views.wizards.importwallet.ImportWalletWizardModel;
 import org.multibit.hd.ui.views.wizards.edit_contact.EditContactState;
 import org.multibit.hd.ui.views.wizards.edit_contact.EditContactWizard;
 import org.multibit.hd.ui.views.wizards.edit_contact.EditContactWizardModel;
@@ -47,7 +50,9 @@ import org.multibit.hd.ui.views.wizards.language_settings.LanguageSettingsState;
 import org.multibit.hd.ui.views.wizards.language_settings.LanguageSettingsWizard;
 import org.multibit.hd.ui.views.wizards.language_settings.LanguageSettingsWizardModel;
 import org.multibit.hd.ui.views.wizards.credentials.CredentialsRequestType;
+import org.multibit.hd.ui.views.wizards.importwallet.ImportWalletRequestType;
 import org.multibit.hd.ui.views.wizards.credentials.CredentialsWizard;
+import org.multibit.hd.ui.views.wizards.importwallet.ImportWalletWizard;
 import org.multibit.hd.ui.views.wizards.payments.PaymentsState;
 import org.multibit.hd.ui.views.wizards.payments.PaymentsWizard;
 import org.multibit.hd.ui.views.wizards.payments.PaymentsWizardModel;
@@ -260,6 +265,16 @@ public class Wizards {
          return new CredentialsWizard(new CredentialsWizardModel(CredentialsState.CREDENTIALS_ENTER_PASSWORD, credentialsRequestType), true);
      }
    }
+
+   /**
+     * @return A new "import wallet" wizard for a warm start
+     */
+    public static ImportWalletWizard newImportWalletWizard(ContactService contactService, ImportWalletRequestType importwalletRequestType) {
+        log.debug("New 'Import Wallet wizard' with importwalletRequestType = " + importwalletRequestType);
+        return new ImportWalletWizard(new ImportWalletWizardModel(contactService, ImportWalletState.CREDENTIALS_ENTER_PASSWORD, importwalletRequestType), true);
+
+
+    }
 
   /**
    * @return A new "change credentials" wizard

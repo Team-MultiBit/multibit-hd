@@ -66,7 +66,7 @@ public class PersistentContactService implements ContactService {
    *
    * <p>Reduced visibility constructor to prevent accidental instance creation outside of CoreServices.</p>
    */
-  PersistentContactService(WalletId walletId) {
+  public PersistentContactService(WalletId walletId) {
 
     Preconditions.checkNotNull(walletId, "'walletId' must be present");
 
@@ -332,12 +332,10 @@ public class PersistentContactService implements ContactService {
   }
 
   @Override
-  public void importContacts() throws ContactsImportException {
+  public void importContacts(CharSequence importWalletpasswordIn, WalletId importWalleIdIn) throws ContactsImportException {
 
-//    String importWalletId = "315bb89c-6a548630-8be41c19-657597db-55848f0b";
-//    String importWalletRoot = WalletManager.createWalletRoot(importWalletId);
-    String importWalletRoot = "mbhd-315bb89c-6a548630-8be41c19-657597db-55848f0b";
-    String importWalletPassword = "helloworld";
+    String importWalletPassword = importWalletpasswordIn.toString();
+    String importWalletRoot = WalletManager.createWalletRoot(importWalleIdIn);
     File importWalletDirectory = WalletManager.getOrCreateWalletDirectory(applicationDataDirectory, importWalletRoot);
     File contactsToBeImportedDirectory = new File(importWalletDirectory.getAbsolutePath() + File.separator + CONTACTS_DIRECTORY_NAME);
     File contactsToBeImported = new File(contactsToBeImportedDirectory.getAbsolutePath() + File.separator + CONTACTS_DATABASE_NAME);

@@ -97,6 +97,8 @@ public enum MessageKey {
   VERIFY_MESSAGE("verify_message"),
   VERIFY_MESSAGE_TOOLTIP("verify_message_tooltip"),
 
+   IMPORT_WALLET("Import"),
+   IMPORT_WALLET_TOOLTIP("Import Wallet Contacts"),
   // Nouns
 
   YES("yes"),
