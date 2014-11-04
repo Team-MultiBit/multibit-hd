@@ -1034,4 +1034,22 @@ public class Buttons {
     return button;
   }
 
+   /**
+    * @param action The click action
+    *
+    * @return A new "change wallet" button with icon
+    */
+   public static JButton newShowChangeWalletButton(Action action) {
+        JButton button = newLargeButton(action, MessageKey.SHOW_CHANGE_WALLET_WIZARD, MessageKey.SHOW_CHANGE_WALLET_WIZARD_TOOLTIP);
+        AwesomeDecorator.applyIcon(
+               AwesomeIcon.FIRE,
+               button,
+               true,
+               JLabel.BOTTOM,
+               MultiBitUI.LARGE_ICON_SIZE
+       );
+
+       return button;
+   }
+
 }

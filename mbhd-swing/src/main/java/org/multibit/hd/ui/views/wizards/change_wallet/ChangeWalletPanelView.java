@@ -1,9 +1,10 @@
-package org.multibit.hd.ui.views.wizards.importwallet;
+package org.multibit.hd.ui.views.wizards.change_wallet;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.*;
 import net.miginfocom.swing.MigLayout;
 import org.multibit.hd.core.concurrent.SafeExecutors;
+import org.multibit.hd.core.config.Configurations;
 import org.multibit.hd.core.dto.WalletId;
 import org.multibit.hd.core.dto.WalletSummary;
 import org.multibit.hd.core.events.SecurityEvent;
@@ -11,7 +12,6 @@ import org.multibit.hd.core.exceptions.ExceptionHandler;
 import org.multibit.hd.core.exceptions.WalletLoadException;
 import org.multibit.hd.core.managers.InstallationManager;
 import org.multibit.hd.core.managers.WalletManager;
-import org.multibit.hd.core.services.ContactService;
 import org.multibit.hd.core.services.CoreServices;
 import org.multibit.hd.ui.audio.Sounds;
 import org.multibit.hd.ui.events.view.ViewEvents;
@@ -32,11 +32,12 @@ import org.multibit.hd.ui.views.wizards.WizardButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+
+
 
 
 /**
@@ -48,9 +49,9 @@ import java.util.concurrent.TimeUnit;
  * @since 0.0.1
  *  
  */
-public class ImportWalletPanelView extends AbstractWizardPanelView<ImportWalletWizardModel,ImportWalletPanelModel> {
+public class ChangeWalletPanelView extends AbstractWizardPanelView<ChangeWalletWizardModel,ChangeWalletPanelModel> {
 
-    private static final Logger log = LoggerFactory.getLogger(ImportWalletPanelView.class);
+    private static final Logger log = LoggerFactory.getLogger(ChangeWalletPanelView.class);
 
     // Panel specific components
     private ModelAndView<DisplaySecurityAlertModel, DisplaySecurityAlertView> displaySecurityPopoverMaV;
@@ -62,7 +63,7 @@ public class ImportWalletPanelView extends AbstractWizardPanelView<ImportWalletW
     /**
      * @param wizard The wizard managing the states
      */
-    public ImportWalletPanelView(AbstractWizard<ImportWalletWizardModel> wizard, String panelName) {
+    public ChangeWalletPanelView(AbstractWizard<ChangeWalletWizardModel> wizard, String panelName) {
 
         super(wizard, panelName, MessageKey.PASSWORD_TITLE, AwesomeIcon.LOCK);
 
@@ -77,7 +78,7 @@ public class ImportWalletPanelView extends AbstractWizardPanelView<ImportWalletW
         selectWalletMaV = Components.newSelectWalletMaV(getPanelName());
 
         // Configure the panel model
-        final ImportWalletPanelModel panelModel = new ImportWalletPanelModel(
+        final ChangeWalletPanelModel panelModel = new ChangeWalletPanelModel(
                 getPanelName(),
                 enterPasswordMaV.getModel(),
                 selectWalletMaV.getModel()
@@ -110,7 +111,7 @@ public class ImportWalletPanelView extends AbstractWizardPanelView<ImportWalletW
     }
 
     @Override
-    protected void initialiseButtons(AbstractWizard<ImportWalletWizardModel> wizard) {
+    protected void initialiseButtons(AbstractWizard<ChangeWalletWizardModel> wizard) {
 
         PanelDecorator.addCancelApply(this, wizard);
 
@@ -125,7 +126,7 @@ public class ImportWalletPanelView extends AbstractWizardPanelView<ImportWalletW
                 true
         );
 
-    }
+}
 
 
     @Override
@@ -208,11 +209,6 @@ public class ImportWalletPanelView extends AbstractWizardPanelView<ImportWalletW
                     public void onSuccess(Boolean result) {
                         // Check the result
                         if (result) {
-
-                            WalletId walletId = selectWalletMaV.getModel().getValue().getWalletId();
-                            CharSequence password = enterPasswordMaV.getModel().getValue();
-                            ContactService contactService = CoreServices.getCurrentContactService();
-                            contactService.importContacts(password, walletId);
 
                             // Maintain the spinner while the initialisation continues
 
@@ -305,7 +301,18 @@ public class ImportWalletPanelView extends AbstractWizardPanelView<ImportWalletW
             Optional<WalletSummary> currentWalletSummary = WalletManager.INSTANCE.getCurrentWalletSummary();
             if (currentWalletSummary.isPresent()) {
 
-                WalletManager.INSTANCE.open(InstallationManager.getOrCreateApplicationDataDirectory(), CurrentWalletID, CurrentWalletPassword);
+                // Store this wallet in the current configuration
+                String walletRoot = WalletManager.createWalletRoot(walletId);
+                Configurations.currentConfiguration.getWallet().setCurrentWalletRoot(walletRoot);
+
+                // Update the wallet data
+                WalletSummary walletSummary = currentWalletSummary.get();
+                walletSummary.setPassword(password);
+
+                // Create the history service
+                CoreServices.getOrCreateHistoryService(walletSummary.getWalletId());
+
+                // Must have succeeded to be here
                 CoreServices.logHistory(Languages.safeText(MessageKey.PASSWORD_VERIFIED));
 
                 return true;
@@ -314,7 +321,7 @@ public class ImportWalletPanelView extends AbstractWizardPanelView<ImportWalletW
         }
 
         // Must have failed to be here
-        log.error("Failed attempt to import contact!");
+        log.error("Failed attempt to switch wallet!");
 
         return false;
 

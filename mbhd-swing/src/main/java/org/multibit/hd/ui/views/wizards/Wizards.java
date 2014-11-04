@@ -81,6 +81,10 @@ import org.multibit.hd.ui.views.wizards.verify_message.VerifyMessageWizardModel;
 import org.multibit.hd.ui.views.wizards.verify_network.VerifyNetworkState;
 import org.multibit.hd.ui.views.wizards.verify_network.VerifyNetworkWizard;
 import org.multibit.hd.ui.views.wizards.verify_network.VerifyNetworkWizardModel;
+import org.multibit.hd.ui.views.wizards.change_wallet.ChangeWalletState;
+import org.multibit.hd.ui.views.wizards.change_wallet.ChangeWalletWizardModel;
+import org.multibit.hd.ui.views.wizards.change_wallet.ChangeWalletRequestType;
+import org.multibit.hd.ui.views.wizards.change_wallet.ChangeWalletWizard;
 import org.multibit.hd.ui.views.wizards.welcome.WelcomeWizard;
 import org.multibit.hd.ui.views.wizards.welcome.WelcomeWizardModel;
 import org.multibit.hd.ui.views.wizards.welcome.WelcomeWizardState;
@@ -267,7 +271,7 @@ public class Wizards {
    }
 
    /**
-     * @return A new "import wallet" wizard for a warm start
+     * @return A new "import wallet" wizard
      */
     public static ImportWalletWizard newImportWalletWizard(ContactService contactService, ImportWalletRequestType importwalletRequestType) {
         log.debug("New 'Import Wallet wizard' with importwalletRequestType = " + importwalletRequestType);
@@ -284,6 +288,17 @@ public class Wizards {
     log.debug("New 'Change credentials wizard'");
 
     return new ChangePasswordWizard(new ChangePasswordWizardModel(ChangePasswordState.CHANGE_PASSWORD_ENTER_PASSWORD), false);
+
+  }
+
+  /**
+   * @return A new "change wallet" wizard
+   */
+  public static ChangeWalletWizard newChangeWalletWizard(ChangeWalletRequestType changewalletRequestType) {
+
+      log.debug("New 'Change Wallet wizard' with changewalletRequestType = " + changewalletRequestType);
+
+      return new ChangeWalletWizard(new ChangeWalletWizardModel(ChangeWalletState.CREDENTIALS_ENTER_PASSWORD, changewalletRequestType), true);
 
   }
 

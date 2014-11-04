@@ -21,8 +21,13 @@ import org.multibit.hd.ui.views.screens.Screen;
 import org.multibit.hd.ui.views.wizards.Wizards;
 import org.multibit.hd.ui.views.wizards.edit_wallet.EditWalletState;
 import org.multibit.hd.ui.views.wizards.edit_wallet.EditWalletWizardModel;
+import org.multibit.hd.ui.views.wizards.change_wallet.ChangeWalletRequestType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.multibit.hd.ui.views.screens.contacts.ContactsScreenModel;
+import org.multibit.hd.ui.views.screens.contacts.ContactsScreenView;
+
+
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -92,6 +97,7 @@ public class ToolsScreenView extends AbstractScreenView<ToolsScreenModel> {
 
     contentPanel.add(Buttons.newLargeShowSignMessageWizardButton(getShowSignMessageWizardAction()), MultiBitUI.LARGE_BUTTON_MIG + ",align center,push");
     contentPanel.add(Buttons.newShowVerifyMessageWizardButton(getShowVerifyMessageWizardAction()), MultiBitUI.LARGE_BUTTON_MIG + ",align center,push");
+    contentPanel.add(Buttons.newShowChangeWalletButton(getShowChangeWalletAction()), MultiBitUI.LARGE_BUTTON_MIG + ",align center,push");
 
     setInitialised(true);
     return contentPanel;
@@ -187,6 +193,19 @@ public class ToolsScreenView extends AbstractScreenView<ToolsScreenModel> {
         Panels.showLightBox(Wizards.newEditWalletWizard().getWizardScreenHolder());
       }
     };
+  }
+
+  /**
+   * @return An action to show the "change wallet" tool
+   */
+  private AbstractAction getShowChangeWalletAction() {
+      return new AbstractAction() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+
+              Panels.showLightBox(Wizards.newChangeWalletWizard(ChangeWalletRequestType.PASSWORD).getWizardScreenHolder());
+          }
+      };
   }
 
   /**

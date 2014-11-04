@@ -485,6 +485,9 @@ public enum MessageKey {
   SHOW_EMPTY_WALLET_WIZARD("show_empty_wallet_wizard"),
   SHOW_EMPTY_WALLET_WIZARD_TOOLTIP("show_empty_wallet_wizard_tooltip"),
 
+  SHOW_CHANGE_WALLET_WIZARD("Change Wallet"),
+  SHOW_CHANGE_WALLET_WIZARD_TOOLTIP("Show change wallet wizard"),
+
   SHOW_SIGN_WIZARD("show_sign_wizard"),
   SHOW_SIGN_WIZARD_TOOLTIP("show_sign_wizard_tooltip"),
 
