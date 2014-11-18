@@ -137,7 +137,7 @@ public class MainController extends AbstractController implements
         }
         WalletManager.INSTANCE.onShutdownEvent(shutdownEvent);
         BackupManager.INSTANCE.onShutdownEvent(shutdownEvent);
-        InstallationManager.onShutdownEvent(shutdownEvent);
+        InstallationManager.onShutdownEvent();
 
         // Dispose of the main view and all its attendant references
         log.debug("Disposing of MainView");

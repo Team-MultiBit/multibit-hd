@@ -548,6 +548,7 @@ public enum MessageKey {
   WALLET_PASSWORD_NOTE_1("wallet_password_note_1"),
   WALLET_PASSWORD_NOTE_2("wallet_password_note_2"),
   WALLET_PASSWORD_NOTE_3("wallet_password_note_3"),
+  WALLET_PASSWORD_NOTE_4("wallet_password_note_4"),
 
   RESTORE_METHOD_NOTE_1("restore_method_note_1"),
   RESTORE_METHOD_NOTE_2("restore_method_note_2"),

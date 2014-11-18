@@ -58,9 +58,8 @@ public class InstallationManager {
   public static boolean unrestricted = false;
 
   /**
-   * @param shutdownEvent The shutdown event
    */
-  public static void onShutdownEvent(ShutdownEvent shutdownEvent) {
+  public static void onShutdownEvent() {
 
     currentApplicationDataDirectory = null;
 
@@ -121,7 +120,7 @@ public class InstallationManager {
 
     // In Linux/Unix/Solaris, set applicationDataDirectory to be only owner readable
     if (OSUtils.isLinux() || OSUtils.isUnix() || OSUtils.isSolaris()){
-        SecureFiles.verifyDirectoryOrCreateOnlyOwnerReadableExecutableDirectory(applicationDataDirectory);
+        SecureFiles.verifyDirectoryOrCreateOnlyOwnerReadableDirectory(applicationDataDirectory);
     } else {
         SecureFiles.verifyOrCreateDirectory(applicationDataDirectory);
     }

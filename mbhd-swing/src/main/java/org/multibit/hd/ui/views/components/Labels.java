@@ -965,7 +965,8 @@ public class Labels {
     return newNoteLabel(new MessageKey[]{
       MessageKey.WALLET_PASSWORD_NOTE_1,
       MessageKey.WALLET_PASSWORD_NOTE_2,
-      MessageKey.WALLET_PASSWORD_NOTE_3
+      MessageKey.WALLET_PASSWORD_NOTE_3,
+            MessageKey.WALLET_PASSWORD_NOTE_4
     }, new Object[][]{});
 
   }
@@ -1217,7 +1218,8 @@ public class Labels {
   public static JLabel newChangePasswordNote2() {
 
     return newNoteLabel(new MessageKey[]{
-      MessageKey.CHANGE_PASSWORD_NOTE_2
+      MessageKey.CHANGE_PASSWORD_NOTE_2,
+            MessageKey.WALLET_PASSWORD_NOTE_4
     }, new Object[][]{});
 
   }
